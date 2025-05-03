@@ -16,7 +16,7 @@ import Editor from "@monaco-editor/react";
 
 function Query() {
   const [endpoint, setEndpoint] = useState("");
-  const [question, setQuestion] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [graphqlQuery, setGraphqlQuery] = useState("");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -34,7 +34,7 @@ function Query() {
         "https://graphql-ai-api.onrender.com/query",
         {
           endpoint,
-          question,
+          prompt,
         }
       );
       if (response.data) {
@@ -56,11 +56,10 @@ function Query() {
       </div>
 
       <h3 className="mb-4 text-center graphqlai-blue">
-        Natural Language to GraphQL Query
+        Natural Language to GraphQL Query Generator
       </h3>
 
       <Form onSubmit={handleSubmit}>
-        {/* Endpoint field with left-aligned label */}
         <Form.Group className="mb-3 text-start" controlId="endpoint">
           <Form.Label className="graphqlai-blue">GraphQL Endpoint:</Form.Label>
           <Form.Control
@@ -71,17 +70,16 @@ function Query() {
           />
         </Form.Group>
 
-        {/* Question field with left-aligned label */}
-        <Form.Group className="mb-3 text-start" controlId="question">
-          <Form.Label className="graphqlai-blue">Your Question:</Form.Label>
+        <Form.Group className="mb-3 text-start" controlId="prompt">
+          <Form.Label className="graphqlai-blue">Prompt:</Form.Label>
           <InputGroup>
             <Form.Control
               type="text"
               placeholder="Which products have the highest sales?"
               aria-label="Enter your query"
               aria-describedby="button-addon2"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
+              value={prompt}
+              onChange={(e) => setPrompt(e.target.value)}
             />
             <Button variant="primary" type="submit" id="button-addon2">
               {loading ? (
