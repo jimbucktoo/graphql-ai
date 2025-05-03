@@ -10,6 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.7.0",
     "ace-builds": "^1.39.1",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.5",

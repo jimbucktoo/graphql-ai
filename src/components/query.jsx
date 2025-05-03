@@ -1,15 +1,18 @@
-// src/components/Query.jsx
 import React, { useState } from "react";
 import axios from "axios";
 import "../App.css";
-import { Form, Button, Alert, Spinner, Card } from "react-bootstrap";
-import AceEditor from "react-ace";
-
-// Use javascript mode as a substitute for GraphQL
-import "ace-builds/src-noconflict/mode-javascript";
-// You can still use JSON mode for the results
-import "ace-builds/src-noconflict/mode-json";
-import "ace-builds/src-noconflict/theme-github";
+import logo from "../assets/GraphQLAI.png";
+import {
+  Form,
+  Button,
+  InputGroup,
+  Alert,
+  Spinner,
+  Card,
+  Row,
+  Col,
+} from "react-bootstrap";
+import Editor from "@monaco-editor/react";
 
 function Query() {
   const [question, setQuestion] = useState("");
@@ -26,11 +29,9 @@ function Query() {
     setLoading(true);
 
     try {
-      // Adjust the URL to match your Flask back-end endpoint.
       const response = await axios.post("http://127.0.0.1:10000/query", {
         question,
       });
-
       if (response.data) {
         setGraphqlQuery(response.data.graphql_query);
         setResult(response.data.result);
@@ -44,33 +45,44 @@ function Query() {
 
   return (
     <>
-      <h2 className="mb-4 text-center">Natural Language to GraphQL Query</h2>
+      <div className="d-flex justify-content-center align-items-center mb-4">
+        <img src={logo} height="60" width="60" className="me-3" alt="logo" />
+        <h1 className="graphqlai-blue mb-0">GraphQLAI</h1>
+      </div>
+
+      <h3 className="mb-4 text-center graphqlai-blue">
+        Natural Language to GraphQL Query
+      </h3>
+
+      <br />
+
       <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="question">
-          <Form.Label>Enter your query</Form.Label>
+        <InputGroup className="mb-3">
           <Form.Control
             type="text"
             placeholder="Which products have the highest sales?"
+            aria-label="Enter your query"
+            aria-describedby="button-addon2"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
           />
-        </Form.Group>
-        <Button variant="primary" type="submit" className="mt-3">
-          {loading ? (
-            <>
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />{" "}
-              Processing...
-            </>
-          ) : (
-            "Submit"
-          )}
-        </Button>
+          <Button variant="primary" type="submit" id="button-addon2">
+            {loading ? (
+              <>
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />{" "}
+                Generating...
+              </>
+            ) : (
+              "Submit"
+            )}
+          </Button>
+        </InputGroup>
       </Form>
 
       {error && (
@@ -79,47 +91,51 @@ function Query() {
         </Alert>
       )}
 
-      {graphqlQuery && (
-        <Card className="mt-4">
-          <Card.Header>Generated GraphQL Query</Card.Header>
-          <Card.Body>
-            <AceEditor
-              mode="javascript" // Using "javascript" mode as a fallback
-              theme="github"
-              name="graphql_query_editor"
-              value={graphqlQuery}
-              readOnly={true}
-              width="100%"
-              height="200px"
-              setOptions={{
-                showLineNumbers: true,
-                tabSize: 2,
-              }}
-            />
-          </Card.Body>
-        </Card>
-      )}
+      <Row className="mt-4">
+        <Col md={6} className="d-flex mb-3">
+          <Card className="flex-fill h-100">
+            <Card.Header className="results">
+              Generated GraphQL Query
+            </Card.Header>
+            <Card.Body style={{ padding: 0 }}>
+              <Editor
+                height="280px"
+                width="400px"
+                defaultLanguage="graphql"
+                value={graphqlQuery}
+                options={{
+                  readOnly: true,
+                  minimap: { enabled: false },
+                  wordWrap: "on",
+                  fontFamily: "'Fira Code', monospace",
+                  placeholder: "Your GraphQL query will appear here",
+                }}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
 
-      {result && (
-        <Card className="mt-4">
-          <Card.Header>Query Result</Card.Header>
-          <Card.Body>
-            <AceEditor
-              mode="json"
-              theme="github"
-              name="query_result_editor"
-              value={JSON.stringify(result, null, 2)}
-              readOnly={true}
-              width="100%"
-              height="200px"
-              setOptions={{
-                showLineNumbers: true,
-                tabSize: 2,
-              }}
-            />
-          </Card.Body>
-        </Card>
-      )}
+        <Col md={6} className="d-flex mb-3">
+          <Card className="flex-fill h-100">
+            <Card.Header className="results">Query Result</Card.Header>
+            <Card.Body style={{ padding: 0 }}>
+              <Editor
+                height="280px"
+                width="400px"
+                defaultLanguage="json"
+                value={result ? JSON.stringify(result, null, 2) : ""}
+                options={{
+                  readOnly: true,
+                  minimap: { enabled: false },
+                  wordWrap: "on",
+                  fontFamily: "'Fira Code', monospace",
+                  placeholder: "Your query results will appear here",
+                }}
+              />
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 }
