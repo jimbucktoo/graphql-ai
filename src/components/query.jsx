@@ -75,7 +75,7 @@ function Query() {
           <InputGroup>
             <Form.Control
               type="text"
-              placeholder="Which products have the highest sales?"
+              placeholder="Show me all the movies with their titles"
               aria-label="Enter your query"
               aria-describedby="button-addon2"
               value={prompt}
