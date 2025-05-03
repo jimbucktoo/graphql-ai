@@ -15,6 +15,7 @@ import {
 import Editor from "@monaco-editor/react";
 
 function Query() {
+  const [endpoint, setEndpoint] = useState("");
   const [question, setQuestion] = useState("");
   const [graphqlQuery, setGraphqlQuery] = useState("");
   const [result, setResult] = useState(null);
@@ -32,6 +33,7 @@ function Query() {
       const response = await axios.post(
         "https://graphql-ai-api.onrender.com/query",
         {
+          endpoint,
           question,
         }
       );
@@ -57,35 +59,48 @@ function Query() {
         Natural Language to GraphQL Query
       </h3>
 
-      <br />
-
       <Form onSubmit={handleSubmit}>
-        <InputGroup className="mb-3">
+        {/* Endpoint field with left-aligned label */}
+        <Form.Group className="mb-3 text-start" controlId="endpoint">
+          <Form.Label className="graphqlai-blue">GraphQL Endpoint:</Form.Label>
           <Form.Control
-            type="text"
-            placeholder="Which products have the highest sales?"
-            aria-label="Enter your query"
-            aria-describedby="button-addon2"
-            value={question}
-            onChange={(e) => setQuestion(e.target.value)}
+            type="url"
+            placeholder="https://myapi.com/graphql"
+            value={endpoint}
+            onChange={(e) => setEndpoint(e.target.value)}
           />
-          <Button variant="primary" type="submit" id="button-addon2">
-            {loading ? (
-              <>
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />{" "}
-                Generating...
-              </>
-            ) : (
-              "Submit"
-            )}
-          </Button>
-        </InputGroup>
+        </Form.Group>
+
+        {/* Question field with left-aligned label */}
+        <Form.Group className="mb-3 text-start" controlId="question">
+          <Form.Label className="graphqlai-blue">Your Question:</Form.Label>
+          <InputGroup>
+            <Form.Control
+              type="text"
+              placeholder="Which products have the highest sales?"
+              aria-label="Enter your query"
+              aria-describedby="button-addon2"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+            <Button variant="primary" type="submit" id="button-addon2">
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />{" "}
+                  Generating...
+                </>
+              ) : (
+                "Submit"
+              )}
+            </Button>
+          </InputGroup>
+        </Form.Group>
       </Form>
 
       {error && (
