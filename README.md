@@ -1,11 +1,11 @@
 # graphql-ai
 
-GraphQL-AI is an AI-powered GraphQL query generator using natural language processing.
+GraphQL-AI converts plain English requests into precise, ready-to-use GraphQL queries, simplifying and speeding up data fetching.
 
 ## Technologies
 
-- [Flask](https://flask.palletsprojects.com/en/3.0.x/) - Flask is a micro web framework written in Python.
-- [Python](https://www.python.org/) - Python is a high-level, general-purpose programming language. Its design philosophy emphasizes code readability with the use of significant indentation.
+- [Bootstrap](https://www.getbootstrap.com/) - Bootstrap is a free and open-source front-end framework for developing websites and web applications.
+- [React](https://reactjs.org/) - React is a JavaScript library for building user interfaces. It is maintained by Facebook and a community of individual developers and companies.
 
 ## Authors
 
