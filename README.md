@@ -1,6 +1,12 @@
 # graphql-ai
 
-GraphQL-AI converts plain English requests into precise, ready-to-use GraphQL queries, simplifying and speeding up data fetching.
+GraphQLAI converts plain English requests into precise, ready-to-use GraphQL queries, simplifying and speeding up data fetching.
+
+## Links
+
+- [GraphQLAI Front-End](https://moonshot-ai.surge.sh/) - GraphQLAI Front-End Application
+- [GraphQLAI Repository](https://github.com/jimbucktoo/moonshot-ai/) - GraphQLAI Github Repository
+- [GraphQLAI API Repository](https://github.com/jimbucktoo/moonshot-ai-api/) - GraphQLAI API Github Repository
 
 ## Technologies
 
