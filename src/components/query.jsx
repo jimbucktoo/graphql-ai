@@ -145,7 +145,7 @@ function Query() {
                   minimap: { enabled: false },
                   wordWrap: "on",
                   fontFamily: "'Fira Code', monospace",
-                  placeholder: "Your query results will appear here",
+                  placeholder: "Your query result will appear here",
                 }}
               />
             </Card.Body>
