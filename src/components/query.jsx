@@ -29,9 +29,12 @@ function Query() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://127.0.0.1:10000/query", {
-        question,
-      });
+      const response = await axios.post(
+        "https://graphql-ai-api.onrender.com/query",
+        {
+          question,
+        }
+      );
       if (response.data) {
         setGraphqlQuery(response.data.graphql_query);
         setResult(response.data.result);
