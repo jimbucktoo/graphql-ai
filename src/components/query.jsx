@@ -1,29 +1,60 @@
-import React, { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import axios from "axios";
-import "../App.css";
-import logo from "../assets/GraphQLAI.png";
-import {
-  Form,
-  Button,
-  InputGroup,
-  Alert,
-  Spinner,
-  Card,
-  Row,
-  Col,
-} from "react-bootstrap";
 import Editor from "@monaco-editor/react";
+import logo from "../assets/transparent.png";
+import "./query.css";
+
+const EDITOR_THEME = "graphqlai-dark";
+
+function defineEditorTheme(monaco) {
+  monaco.editor.defineTheme(EDITOR_THEME, {
+    base: "vs-dark",
+    inherit: true,
+    rules: [],
+    colors: {
+      "editor.background":              "#0D1117",
+      "editor.foreground":              "#E6EDF3",
+      "editorLineNumber.foreground":    "#484F58",
+      "editorGutter.background":        "#0D1117",
+      "editor.lineHighlightBackground": "#00000000",
+      "editorCursor.foreground":        "#0d6efd",
+      "editor.selectionBackground":     "#0d6efd33",
+      "scrollbar.shadow":               "#00000000",
+      "scrollbarSlider.background":     "#30363D80",
+      "scrollbarSlider.hoverBackground":"#484F5880",
+    },
+  });
+}
+
+const EDITOR_OPTIONS = {
+  readOnly: true,
+  minimap: { enabled: false },
+  wordWrap: "on",
+  fontFamily: "'Fira Code', 'Cascadia Code', monospace",
+  fontSize: 13,
+  fontLigatures: true,
+  lineNumbers: "off",
+  scrollBeyondLastLine: false,
+  renderLineHighlight: "none",
+  padding: { top: 16, bottom: 16 },
+  scrollbar: {
+    verticalScrollbarSize: 5,
+    horizontalScrollbarSize: 5,
+  },
+};
 
 function Query() {
-  const [endpoint, setEndpoint] = useState("");
-  const [prompt, setPrompt] = useState("");
+  const [endpoint, setEndpoint]     = useState("");
+  const [prompt, setPrompt]         = useState("");
   const [graphqlQuery, setGraphqlQuery] = useState("");
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [result, setResult]         = useState(null);
+  const [loading, setLoading]       = useState(false);
+  const [error, setError]           = useState("");
+  const [hasResults, setHasResults] = useState(false);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const executeQuery = useCallback(async () => {
+    if (!endpoint.trim() || !prompt.trim() || loading) return;
+
     setGraphqlQuery("");
     setResult(null);
     setError("");
@@ -32,127 +63,188 @@ function Query() {
     try {
       const response = await axios.post(
         "https://graphql-ai-api.onrender.com/query",
-        {
-          endpoint,
-          prompt,
-        }
+        { endpoint, prompt }
       );
       if (response.data) {
         setGraphqlQuery(response.data.graphql_query);
         setResult(response.data.result);
+        setHasResults(true);
       }
     } catch (err) {
       setError(err.response ? err.response.data.error : err.message);
     } finally {
       setLoading(false);
     }
+  }, [endpoint, prompt, loading]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    executeQuery();
   };
 
+  /* Ctrl/Cmd+Enter keyboard shortcut */
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        executeQuery();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [executeQuery]);
+
+  const canSubmit = endpoint.trim() && prompt.trim() && !loading;
+
   return (
-    <>
-      <div className="d-flex justify-content-center align-items-center mb-4">
-        <img src={logo} height="60" width="60" className="me-3" alt="logo" />
-        <h1 className="graphqlai-blue mb-0">GraphQLAI</h1>
-      </div>
+    <main className="query-page">
+      <a href="#query-form" className="skip-link">
+        Skip to form
+      </a>
 
-      <h3 className="mb-4 text-center graphqlai-blue">
-        Natural Language to GraphQL Query Generator
-      </h3>
-
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3 text-start" controlId="endpoint">
-          <Form.Label className="graphqlai-blue">GraphQL Endpoint:</Form.Label>
-          <Form.Control
-            type="url"
-            placeholder="https://myapi.com/graphql"
-            value={endpoint}
-            onChange={(e) => setEndpoint(e.target.value)}
+      {/* ── Header ── */}
+      <header className="app-header">
+        <div className="brand">
+          <img
+            src={logo}
+            width="48"
+            height="48"
+            className="brand-logo"
+            alt="GraphQLAI logo"
           />
-        </Form.Group>
+          <h1 className="brand-name">GraphQLAI</h1>
+        </div>
+        <p className="brand-tagline">
+          Natural Language to GraphQL Query Generator
+        </p>
+      </header>
 
-        <Form.Group className="mb-3 text-start" controlId="prompt">
-          <Form.Label className="graphqlai-blue">Prompt:</Form.Label>
-          <InputGroup>
-            <Form.Control
+      {/* ── Form ── */}
+      <section className="form-section" aria-labelledby="form-heading">
+        <h2 id="form-heading" className="sr-only">
+          Query Form
+        </h2>
+        <form
+          id="query-form"
+          onSubmit={handleSubmit}
+          noValidate
+          aria-busy={loading}
+        >
+          <div className="field-group">
+            <label htmlFor="endpoint" className="field-label">
+              GraphQL Endpoint
+            </label>
+            <input
+              id="endpoint"
+              type="url"
+              className="field-input"
+              placeholder="https://myapi.com/graphql"
+              value={endpoint}
+              onChange={(e) => setEndpoint(e.target.value)}
+              autoComplete="url"
+              spellCheck={false}
+            />
+          </div>
+
+          <hr className="field-divider" />
+
+          <div className="field-group">
+            <label htmlFor="prompt" className="field-label">
+              Natural Language Prompt
+            </label>
+            <input
+              id="prompt"
               type="text"
+              className="field-input"
               placeholder="Show me all the movies with their titles"
-              aria-label="Enter your query"
-              aria-describedby="button-addon2"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
+              autoComplete="off"
             />
-            <Button variant="primary" type="submit" id="button-addon2">
-              {loading ? (
-                <>
-                  <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                  />{" "}
-                  Generating...
-                </>
-              ) : (
-                "Submit"
-              )}
-            </Button>
-          </InputGroup>
-        </Form.Group>
-      </Form>
+            <p className="field-hint">
+              Press{" "}
+              <kbd>{navigator.platform.includes("Mac") ? "⌘" : "Ctrl"}</kbd>
+              {" + "}
+              <kbd>Enter</kbd>
+              {" "}to generate
+            </p>
+          </div>
 
+          <button
+            type="submit"
+            className="btn-generate"
+            disabled={!canSubmit}
+            aria-label={
+              loading
+                ? "Generating query, please wait"
+                : "Generate GraphQL query from prompt"
+            }
+          >
+            {loading && (
+              <span className="btn-spinner" aria-hidden="true" />
+            )}
+            {loading ? "Generating…" : "Generate Query"}
+          </button>
+        </form>
+      </section>
+
+      {/* ── Error ── */}
       {error && (
-        <Alert variant="danger" className="mt-4">
-          Error: {error}
-        </Alert>
+        <div className="error-banner" role="alert" aria-atomic="true">
+          <span className="error-icon" aria-hidden="true">⚠</span>
+          <div>
+            <p className="error-title">Request failed</p>
+            <p className="error-message">{error}</p>
+          </div>
+        </div>
       )}
 
-      <Row className="mt-4">
-        <Col md={6} className="d-flex mb-3">
-          <Card className="flex-fill h-100">
-            <Card.Header className="results">
-              Generated GraphQL Query
-            </Card.Header>
-            <Card.Body style={{ padding: 0 }}>
+      {/* ── Results ── */}
+      {hasResults && (
+        <section
+          className="results-section"
+          aria-label="Query results"
+          aria-live="polite"
+        >
+          <div className="result-card">
+            <div className="result-card-header">
+              <h2 className="result-card-title">Generated GraphQL Query</h2>
+            </div>
+            <div
+              className="result-card-body"
+              aria-label="Monaco editor displaying generated GraphQL query"
+            >
               <Editor
-                height="280px"
-                width="400px"
+                height="320px"
                 defaultLanguage="graphql"
                 value={graphqlQuery}
-                options={{
-                  readOnly: true,
-                  minimap: { enabled: false },
-                  wordWrap: "on",
-                  fontFamily: "'Fira Code', monospace",
-                  placeholder: "Your GraphQL query will appear here",
-                }}
+                beforeMount={defineEditorTheme}
+                theme={EDITOR_THEME}
+                options={EDITOR_OPTIONS}
               />
-            </Card.Body>
-          </Card>
-        </Col>
+            </div>
+          </div>
 
-        <Col md={6} className="d-flex mb-3">
-          <Card className="flex-fill h-100">
-            <Card.Header className="results">Query Result</Card.Header>
-            <Card.Body style={{ padding: 0 }}>
+          <div className="result-card">
+            <div className="result-card-header">
+              <h2 className="result-card-title">Query Result</h2>
+            </div>
+            <div
+              className="result-card-body"
+              aria-label="Monaco editor displaying query result JSON"
+            >
               <Editor
-                height="280px"
-                width="400px"
+                height="320px"
                 defaultLanguage="json"
                 value={result ? JSON.stringify(result, null, 2) : ""}
-                options={{
-                  readOnly: true,
-                  minimap: { enabled: false },
-                  wordWrap: "on",
-                  fontFamily: "'Fira Code', monospace",
-                  placeholder: "Your query result will appear here",
-                }}
+                beforeMount={defineEditorTheme}
+                theme={EDITOR_THEME}
+                options={EDITOR_OPTIONS}
               />
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </>
+            </div>
+          </div>
+        </section>
+      )}
+    </main>
   );
 }
 

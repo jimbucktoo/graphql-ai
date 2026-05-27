@@ -1,0 +1,113 @@
+/* ═══════════════════════════════════════════════
+   GraphQLAI Design Tokens
+   All values in the app must reference these.
+   Nothing is hardcoded in components.
+═══════════════════════════════════════════════ */
+
+:root {
+  /* ─── Colors: Background ─── */
+  --color-bg:               #080B10;
+  --color-surface:          #0D1117;
+  --color-surface-hover:    #161B22;
+  --color-surface-elevated: #1C2128;
+
+  /* ─── Colors: Border ─── */
+  --color-border:           #21262D;
+  --color-border-strong:    #30363D;
+
+  /* ─── Colors: Primary (Blue — matches #0d6efd brand color) ─── */
+  --color-primary:         #0d6efd;
+  --color-primary-hover:   #3d8bfd;
+  --color-primary-active:  #0b5ed7;
+  --color-primary-subtle:  rgba(13, 110, 253, 0.08);
+  --color-primary-muted:   rgba(13, 110, 253, 0.15);
+  --color-primary-ring:    rgba(13, 110, 253, 0.25);
+
+  /* ─── Colors: Accent for gradient ─── */
+  --color-accent:          #6610f2;
+
+  /* ─── Colors: Text ─── */
+  --color-text-primary:    #E6EDF3;
+  --color-text-secondary:  #7D8590;
+  --color-text-tertiary:   #484F58;
+  --color-text-on-primary: #080B10;
+
+  /* ─── Colors: Semantic ─── */
+  --color-success:         #3FB950;
+  --color-success-subtle:  rgba(63, 185, 80, 0.10);
+  --color-warning:         #D29922;
+  --color-warning-subtle:  rgba(210, 153, 34, 0.10);
+  --color-error:           #F85149;
+  --color-error-subtle:    rgba(248, 81, 73, 0.10);
+  --color-error-border:    rgba(248, 81, 73, 0.30);
+
+  /* ─── Typography: Fonts ─── */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+
+  /* ─── Typography: Scale ─── */
+  --text-xs:   0.75rem;   /* 12px */
+  --text-sm:   0.875rem;  /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg:   1.125rem;  /* 18px */
+  --text-xl:   1.25rem;   /* 20px */
+  --text-2xl:  1.5rem;    /* 24px */
+  --text-3xl:  1.875rem;  /* 30px */
+  --text-4xl:  2.25rem;   /* 36px */
+
+  /* ─── Typography: Line-height ─── */
+  --leading-tight:   1.25;
+  --leading-snug:    1.375;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.625;
+
+  /* ─── Typography: Weight ─── */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ─── Spacing (8px grid) ─── */
+  --space-1:  0.25rem;   /*  4px */
+  --space-2:  0.5rem;    /*  8px */
+  --space-3:  0.75rem;   /* 12px */
+  --space-4:  1rem;      /* 16px */
+  --space-5:  1.25rem;   /* 20px */
+  --space-6:  1.5rem;    /* 24px */
+  --space-8:  2rem;      /* 32px */
+  --space-10: 2.5rem;    /* 40px */
+  --space-12: 3rem;      /* 48px */
+  --space-16: 4rem;      /* 64px */
+  --space-20: 5rem;      /* 80px */
+
+  /* ─── Border Radius ─── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-2xl:  24px;
+  --radius-full: 9999px;
+
+  /* ─── Elevation / Shadows ─── */
+  --shadow-sm:   0 1px 2px rgba(0, 0, 0, 0.40);
+  --shadow-md:   0 4px 6px rgba(0, 0, 0, 0.40), 0 1px 3px rgba(0, 0, 0, 0.30);
+  --shadow-lg:   0 10px 15px rgba(0, 0, 0, 0.40), 0 4px 6px rgba(0, 0, 0, 0.30);
+  --shadow-xl:   0 20px 25px rgba(0, 0, 0, 0.50), 0 10px 10px rgba(0, 0, 0, 0.40);
+  --shadow-glow: 0 0 20px rgba(96, 165, 250, 0.15);
+
+  /* ─── Z-Index ─── */
+  --z-base:     0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+
+  /* ─── Transitions ─── */
+  --transition-fast:   100ms ease;
+  --transition-base:   150ms ease;
+  --transition-slow:   200ms ease;
+  --transition-reveal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
