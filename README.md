@@ -8,6 +8,7 @@ GraphQLAI converts plain English requests into precise, ready-to-use GraphQL que
 - [GraphQLAI Back-End](https://graphql-ai-api.onrender.com) - GraphQLAI Back-End Server
 - [GraphQLAI Repository](https://github.com/jimbucktoo/graphql-ai/) - GraphQLAI Github Repository
 - [GraphQLAI API Repository](https://github.com/jimbucktoo/graphql-ai-api/) - GraphQLAI API Github Repository
+- [GraphQLAI Slack Repository](https://github.com/jimbucktoo/graphql-ai-slack/) — GraphQLAI Slack Github Repository
 
 ## Technologies
 
